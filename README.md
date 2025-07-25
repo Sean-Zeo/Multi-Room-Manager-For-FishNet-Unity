@@ -24,4 +24,4 @@ This solution is built to be clean, fast, and easy to understand — following t
 
 (Note; this is a direct port of my existing Mirror based solution for Unity; "Mirror Multi-Room Manager")
 
-![Example](images/thumbnail.jpg)
+![Example](images/thumbnail.png)
