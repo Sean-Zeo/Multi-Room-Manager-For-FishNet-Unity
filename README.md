@@ -10,7 +10,7 @@ Think of this solution as a server authoritive (and free) alternative to Photon.
 - **Dynamic room creation** (scene loading + player spawning) from lobby
 - **Automatic room cleanup** (unloads scene when empty)
 - **Built-in lobby system** (using Unity's `OnGUI`) to create/join rooms
-- **LobbyPlayer ↔ RoomPlayer prefab swapping** on room entry
+- **LobbyPlayer/RoomPlayer prefab swapping** on room entry
 - **Physics-isolated scenes** using Unity’s `LocalPhysicsMode`
 - **Scene visibility enforced**: players in Room A cannot see Room B
 - **One server, one port, multiple isolated rooms**
