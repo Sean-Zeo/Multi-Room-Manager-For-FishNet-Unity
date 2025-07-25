@@ -3,8 +3,7 @@
 A lightweight, single-process multi-room solution for FishNet that allows you to host **multiple isolated game rooms** on one server using Unity’s additive scenes and FishNet's built in scene-based visibility.
 Players connect to a central lobby, where they can view active rooms, create new ones (with a custom name, data string, scene name, and max player count), and join existing rooms. Each room runs in its own additive scene with completely isolated network traffic (spawns, RPCs, syncs).
 
-Think of this as a server-authoritative, open-source alternative to Photon — with no cloud lock-in, and full control of your architecture.
-This solution is built to be clean, fast, and easy to understand — following the KISS principle (Keep It Simple, Stupid).
+Think of this solution as a server authoritive (and free) alternative to Photon. This solution follows the KISS design principle (Keep it simple, stupid).
 
 **Features**  
 - **Scene-isolated network rooms** via FishNet’s built-in `SceneCondition`
