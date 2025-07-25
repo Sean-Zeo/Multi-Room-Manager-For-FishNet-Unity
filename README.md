@@ -4,7 +4,7 @@ A lightweight, single-process multi-room solution for FishNet that allows you to
 Players connect to a central lobby, where they can view active rooms, create new ones (with a custom name, data string, scene name, and max player count), and join existing rooms. Each room runs in its own additive scene with completely isolated network traffic (spawns, RPCs, syncs).
 
 Think of this as a server-authoritative, open-source alternative to Photon — with no cloud lock-in, and full control of your architecture.
-This solution is built to be clean, fast, and easy to understand — following the KISS principle (Keep It Simple,
+This solution is built to be clean, fast, and easy to understand — following the KISS principle (Keep It Simple, Stupid).
 
 **Features**  
 - **Scene-isolated network rooms** via FishNet’s built-in `SceneCondition`
@@ -22,6 +22,6 @@ This solution is built to be clean, fast, and easy to understand — following t
 3. Add both prefabs to FishNet’s **Spawnable Prefabs list**
 4. Run the LobbyScene
 
-(Note; this is a direct port of my existing Mirror based solution for Unity; "Mirror Multi-Room Manager")
+(This is a direct port of my existing Mirror based solution for Unity "Mirror Multi-Room Manager")
 
 ![Example](images/thumbnail.png)
