@@ -22,5 +22,6 @@ This solution is built to be clean, fast, and easy to understand — following t
 3. Add both prefabs to FishNet’s **Spawnable Prefabs list**
 4. Run the LobbyScene
 
+(Note; this is a direct port of my existing Mirror based solution for Unity; "Mirror Multi-Room Manager")
 
 ![Example](images/thumbnail.jpg)
