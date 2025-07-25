@@ -14,7 +14,7 @@ Think of this solution as a server authoritive (and free) alternative to Photon.
 - **Physics-isolated scenes** using Unity’s `LocalPhysicsMode`
 - **Scene visibility enforced**: players in Room A cannot see Room B
 - **One server, one port, multiple isolated rooms**
-- Includes FishNetNetworkManagerHUD.cs, a host/client/server management script similar to Mirror's NetworkManagerHUD.cs.
+- **Includes FishNetNetworkManagerHUD.cs**: A host/client/server management OnGUI script similar to Mirror's NetworkManagerHUD.cs.
 
 **Basic Example Setup Instructions**
 1. Assign LobbyScene as scene 0 and RoomScene as scene 1 in the scene build settings
