@@ -13,7 +13,7 @@ public class FishNetNetworkManagerHUD : MonoBehaviour
     {
         if (Application.isBatchMode)
         {
-            Debug.Log("[FishNetHUD] Headless mode detected — starting as Server Only");
+            Debug.Log("[FishNetHUD] Headless mode detected - starting as Server Only");
             StartCoroutine(StartServerAfterAFewSeconds());
         }
     }
