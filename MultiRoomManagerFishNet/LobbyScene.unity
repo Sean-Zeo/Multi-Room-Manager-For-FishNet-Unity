@@ -219,9 +219,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 204161026}
   _networkObjectCache: {fileID: 0}
-  roomPhysicsMode: 0
-  lobbyPlayerPrefab: {fileID: 393275907829406027, guid: d7b90e5609e1b1e46a39b7a769a384d1, type: 3}
-  roomPlayerPrefab: {fileID: 6750043300716173055, guid: 284ced2672232df46837481993915ed2, type: 3}
+  roomPhysicsMode: 2
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,7 +605,7 @@ MonoBehaviour:
   _maximumFrameTicks: 3
   _tickRate: 30
   _pingInterval: 1
-  _physicsMode: 2
+  _physicsMode: 1
 --- !u!114 &1365145210
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -26,10 +26,6 @@ public class MultiRoomManager : NetworkBehaviour
     [Header("Physics")]
     public LocalPhysicsMode roomPhysicsMode = LocalPhysicsMode.None;
 
-    [Header("Prefabs")]
-    public GameObject lobbyPlayerPrefab;
-    public GameObject roomPlayerPrefab;
-
     [HideInInspector]
     public List<RoomInfo> rooms = new();
 
@@ -153,10 +149,6 @@ public class MultiRoomManager : NetworkBehaviour
         InstanceFinder.SceneManager.LoadConnectionScenes(conn, new SceneLoadData(newScene));
         yield return null;
 
-        var roomGO = Instantiate(roomPlayerPrefab);
-        InstanceFinder.ServerManager.Spawn(roomGO, conn);
-        UnitySceneManager.MoveGameObjectToScene(roomGO, newScene);
-
         info.currentPlayers++;
         info.playerConnections.Add(conn);
         connectionToRoom[conn] = info;
@@ -181,10 +173,6 @@ public class MultiRoomManager : NetworkBehaviour
     {
         InstanceFinder.SceneManager.LoadConnectionScenes(conn, new SceneLoadData(info.scene));
         yield return null;
-
-        var roomGO = Instantiate(roomPlayerPrefab);
-        InstanceFinder.ServerManager.Spawn(roomGO, conn);
-        UnitySceneManager.MoveGameObjectToScene(roomGO, info.scene);
 
         info.currentPlayers++;
         info.playerConnections.Add(conn);
