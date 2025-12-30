@@ -175,7 +175,6 @@ public class MultiRoomNetworkManager : MonoBehaviour
 
     IEnumerator UnloadEmptyScene(Scene scene)
     {
-        var unloadOp = SceneManager.UnloadSceneAsync(scene);
-        while(!unloadOp.isDone) yield return null;
+        yield return SceneManager.UnloadSceneAsync(scene);
     }
 }
