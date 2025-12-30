@@ -1,27 +1,22 @@
 # FishNet Multi‑Room Manager
 
-A lightweight, single-process multi-room solution for FishNet that allows you to host **multiple isolated game rooms** on one server using Unity’s additive scenes and FishNet's built in scene-based visibility.
-Players connect to a central lobby, where they can view active rooms, create new ones (with a custom name, data string, scene name, and max player count), and join existing rooms. Each room runs in its own additive scene with completely isolated network traffic (spawns, RPCs, syncs).
+A lightweight, single‑server solution for FishNet that lets you run **multiple isolated game rooms** all within one server using FishNet's built in scene isolation (Scene Condition).  
+Players connect to a lobby and can join or create rooms (with custom name, data string, scene, max‑player count). Each room will have all network traffic (spawns, RPCs, transforms) scoped only to that room's scene.
 
-Think of this solution as a server authoritive (and free) alternative to Photon. This solution follows the KISS design principle (Keep it simple, stupid).
+Think of this solution as a server authoritive (and free) alternative to Photon.
+This solution follows the KISS design principle (Keep it simple, stupid).
+If you want your project to have a lobby, multiple games (rooms) running isolated from one another, then this is for you.
+
+In order to set up the example; set "LobbyScene" as scene 0 and "RoomScene" as scene 1 in the build settings scene list.
+You will also need to change "Active Input Handling" to "Both" or "Input Manager (Old)" in the player settings. 
 
 **Features**  
-- **Scene-isolated network rooms** via FishNet’s built-in `SceneCondition`
-- **Dynamic room creation** (scene loading + player spawning) from lobby
-- **Automatic room cleanup** (unloads scene when empty)
-- **Built-in lobby system** (using Unity's `OnGUI`) to create/join rooms
-- **LobbyPlayer/RoomPlayer prefab swapping** on room entry
-- **Physics-isolated scenes** using Unity’s `LocalPhysicsMode`
-- **Scene visibility enforced**: players in Room A cannot see Room B
-- **One server, one port, multiple isolated rooms**
-- **Includes FishNetNetworkManagerHUD.cs**: A host/client/server management OnGUI script similar to Mirror's NetworkManagerHUD.cs.
+- Dynamic room creation & removal with automatic server‑side cleanup of scenes
+- FishNet scene isolation: players in Room A can’t see or affect Room B  
+- Basic lobby example for creating a room or joining an existing room from the room list  
+- Optional network lobby player spawning while in the lobby scene
+- Auto‑unload of empty rooms and client room‑scene cleanup on disconnect
+- Extra GUI component FishNetNetworkManagerHUD.cs for development
+- One server, one port, multiple isolated rooms
 
-**Basic Example Setup Instructions**
-1. Assign LobbyScene as scene 0 and RoomScene as scene 1 in the scene build settings
-2. Make sure you're using Unity's old Input in build settings
-3. Add both prefabs to FishNet’s **Spawnable Prefabs list**
-4. Run the LobbyScene
-
-(This is a direct port of my existing Mirror based solution for Unity "Mirror Multi-Room Manager")
-
-![Example](images/thumbnail.png)
+![Example](Images/thumbnail.png)

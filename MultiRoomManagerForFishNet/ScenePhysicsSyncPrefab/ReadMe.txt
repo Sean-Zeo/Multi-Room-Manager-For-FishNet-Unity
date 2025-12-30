@@ -1,0 +1,2 @@
+Optional: place this in any scene you wish to have RigidBodies (and similar) synced without confliction between other rooms/scenes.
+You will also need to set roomPhysicsMode to 2D or 3D in MultiRoomNetworkManager based on your preference.
