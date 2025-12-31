@@ -24,6 +24,7 @@ public class BasicLobbyExample : MonoBehaviour
 
     void OnDestroy()
     {
+        if(InstanceFinder.ClientManager != null)
         InstanceFinder.ClientManager.UnregisterBroadcast<RoomListResponseMessage>(OnRoomList);
     }
 

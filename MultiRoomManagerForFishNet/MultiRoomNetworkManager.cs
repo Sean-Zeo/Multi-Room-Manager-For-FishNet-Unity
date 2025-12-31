@@ -27,6 +27,13 @@ public class MultiRoomNetworkManager : MonoBehaviour
         public List<NetworkConnection> playerConnections = new List<NetworkConnection>();
     }
     private readonly Dictionary<NetworkConnection, RoomInfo> connectionToRoom = new();
+    bool creatingRoom = false;
+    public List<CreateRoomRequest> createRoomRequestQueue = new List<CreateRoomRequest>();
+    public class CreateRoomRequest
+    {
+        public NetworkConnection conn;
+        public CreateRoomMessage msg;
+    }
 
     private void Awake()
     {
@@ -38,6 +45,7 @@ public class MultiRoomNetworkManager : MonoBehaviour
         InstanceFinder.ServerManager.RegisterBroadcast<CreateRoomMessage>(OnCreateRoom);
         InstanceFinder.ServerManager.RegisterBroadcast<JoinRoomMessage>(OnJoinRoom);
         InstanceFinder.ServerManager.OnRemoteConnectionState += ServerManager_OnRemoteConnectionState;
+        InstanceFinder.ClientManager.OnClientConnectionState += ClientManager_OnClientConnectionState;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -47,6 +55,7 @@ public class MultiRoomNetworkManager : MonoBehaviour
         InstanceFinder.ServerManager.UnregisterBroadcast<CreateRoomMessage>(OnCreateRoom);
         InstanceFinder.ServerManager.UnregisterBroadcast<JoinRoomMessage>(OnJoinRoom);
         InstanceFinder.ServerManager.OnRemoteConnectionState -= ServerManager_OnRemoteConnectionState;
+        InstanceFinder.ClientManager.OnClientConnectionState -= ClientManager_OnClientConnectionState;
     }
 
     private void ServerManager_OnRemoteConnectionState(NetworkConnection conn, RemoteConnectionStateArgs state)
@@ -73,6 +82,28 @@ public class MultiRoomNetworkManager : MonoBehaviour
                     StartCoroutine(UnloadEmptyScene(info.scene));
                     rooms.Remove(info);
                 }
+            }
+        }
+    }
+
+    private void ClientManager_OnClientConnectionState(ClientConnectionStateArgs state)
+    {
+        if (state.ConnectionState == LocalConnectionState.Stopped)
+        {
+            SceneManager.LoadScene(0, LoadSceneMode.Single);
+            Destroy(this.gameObject);
+        }
+    }
+
+    public void Update()
+    {
+        if (createRoomRequestQueue.Count > 0)
+        {
+            if (!creatingRoom)
+            {
+                if (createRoomRequestQueue[0].conn != null && InstanceFinder.ServerManager.Clients.ContainsKey(createRoomRequestQueue[0].conn.ClientId))
+                    StartCoroutine(CreateRoomCoroutine(createRoomRequestQueue[0].conn, createRoomRequestQueue[0].msg));
+                createRoomRequestQueue.RemoveAt(0);
             }
         }
     }
@@ -116,7 +147,10 @@ public class MultiRoomNetworkManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(CreateRoomCoroutine(conn, msg));
+        CreateRoomRequest newRequest = new CreateRoomRequest();
+        newRequest.conn = conn;
+        newRequest.msg = msg;
+        createRoomRequestQueue.Add(newRequest);
     }
 
     private void OnJoinRoom(NetworkConnection conn, JoinRoomMessage msg, Channel channel)
@@ -126,39 +160,37 @@ public class MultiRoomNetworkManager : MonoBehaviour
         var info = rooms.Find(r => r.roomName == msg.roomName);
         if (info == null || info.currentPlayers >= info.maxPlayers) return;
 
-        if (conn != null)
-        {
-            if (conn.FirstObject != null)
-                InstanceFinder.ServerManager.Despawn(conn.FirstObject);
-            FishNet.Managing.Scened.SceneLoadData sceneLoadData = new FishNet.Managing.Scened.SceneLoadData(info.scene);
-            sceneLoadData.ReplaceScenes = FishNet.Managing.Scened.ReplaceOption.None;
-            InstanceFinder.SceneManager.LoadConnectionScenes(conn, sceneLoadData);
+        if (conn.FirstObject != null)
+            InstanceFinder.ServerManager.Despawn(conn.FirstObject);
+        FishNet.Managing.Scened.SceneLoadData sceneLoadData = new FishNet.Managing.Scened.SceneLoadData(info.scene);
+        sceneLoadData.ReplaceScenes = FishNet.Managing.Scened.ReplaceOption.None;
+        InstanceFinder.SceneManager.LoadConnectionScenes(conn, sceneLoadData);
 
-            connectionToRoom[conn] = info;
-            info.currentPlayers++;
-            info.playerConnections.Add(conn);
-        }
+        connectionToRoom[conn] = info;
+        info.currentPlayers++;
+        info.playerConnections.Add(conn);
     }
 
     IEnumerator CreateRoomCoroutine(NetworkConnection conn, CreateRoomMessage msg)
     {
+        creatingRoom = true;
         LoadSceneParameters parameters = new LoadSceneParameters(LoadSceneMode.Additive, roomPhysicsMode);
         var loadOp = SceneManager.LoadSceneAsync(msg.sceneName, parameters);
-        Scene scene = SceneManager.GetSceneAt(SceneManager.sceneCount -1);
-        while (!loadOp.isDone) yield return null;
+        while (!loadOp.isDone) 
+            yield return null;
 
-        var info = new RoomInfo
+        Scene newScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
+        if (conn != null && InstanceFinder.ServerManager.Clients.ContainsKey(conn.ClientId))
         {
-            roomName = msg.roomName,
-            roomData = msg.roomData,
-            sceneName = msg.sceneName,
-            currentPlayers = 0,
-            maxPlayers = msg.maxPlayers,
-            scene = scene
-        };
-
-        if (conn != null)
-        {
+            var info = new RoomInfo
+            {
+                roomName = msg.roomName,
+                roomData = msg.roomData,
+                sceneName = msg.sceneName,
+                currentPlayers = 0,
+                maxPlayers = msg.maxPlayers,
+                scene = newScene
+            };
             if (conn.FirstObject != null)
                 InstanceFinder.ServerManager.Despawn(conn.FirstObject);
             FishNet.Managing.Scened.SceneLoadData sceneLoadData = new FishNet.Managing.Scened.SceneLoadData(info.scene);
@@ -168,9 +200,13 @@ public class MultiRoomNetworkManager : MonoBehaviour
             connectionToRoom[conn] = info;
             info.currentPlayers++;
             info.playerConnections.Add(conn);
+            rooms.Add(info);
         }
-
-        rooms.Add(info);
+        else
+        {
+            StartCoroutine(UnloadEmptyScene(newScene));
+        }
+        creatingRoom = false;
     }
 
     IEnumerator UnloadEmptyScene(Scene scene)
