@@ -10,8 +10,6 @@ using UnityEngine.SceneManagement;
 public class MultiRoomNetworkManager : MonoBehaviour
 {
     public static MultiRoomNetworkManager Instance;
-    [Tooltip("Optional")]
-    public NetworkObject networkLobbyPlayer;
     public LocalPhysicsMode roomPhysicsMode = LocalPhysicsMode.None;
 
     [HideInInspector]
@@ -60,15 +58,7 @@ public class MultiRoomNetworkManager : MonoBehaviour
 
     private void ServerManager_OnRemoteConnectionState(NetworkConnection conn, RemoteConnectionStateArgs state)
     {
-        if(state.ConnectionState == RemoteConnectionState.Started)
-        {
-            if(networkLobbyPlayer != null)
-            {
-                NetworkObject newLobbyPlayer = Instantiate(networkLobbyPlayer);
-                InstanceFinder.ServerManager.Spawn(newLobbyPlayer, conn);
-            }
-        }
-        else
+        if(state.ConnectionState == RemoteConnectionState.Stopped)
         {
             if (connectionToRoom.ContainsKey(conn))
             {
@@ -160,8 +150,6 @@ public class MultiRoomNetworkManager : MonoBehaviour
         var info = rooms.Find(r => r.roomName == msg.roomName);
         if (info == null || info.currentPlayers >= info.maxPlayers) return;
 
-        if (conn.FirstObject != null)
-            InstanceFinder.ServerManager.Despawn(conn.FirstObject);
         FishNet.Managing.Scened.SceneLoadData sceneLoadData = new FishNet.Managing.Scened.SceneLoadData(info.scene);
         sceneLoadData.ReplaceScenes = FishNet.Managing.Scened.ReplaceOption.None;
         InstanceFinder.SceneManager.LoadConnectionScenes(conn, sceneLoadData);
@@ -191,8 +179,6 @@ public class MultiRoomNetworkManager : MonoBehaviour
                 maxPlayers = msg.maxPlayers,
                 scene = newScene
             };
-            if (conn.FirstObject != null)
-                InstanceFinder.ServerManager.Despawn(conn.FirstObject);
             FishNet.Managing.Scened.SceneLoadData sceneLoadData = new FishNet.Managing.Scened.SceneLoadData(info.scene);
             sceneLoadData.ReplaceScenes = FishNet.Managing.Scened.ReplaceOption.None;
             InstanceFinder.SceneManager.LoadConnectionScenes(conn, sceneLoadData);
