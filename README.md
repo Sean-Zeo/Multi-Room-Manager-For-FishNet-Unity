@@ -14,7 +14,6 @@ You will also need to change "Active Input Handling" to "Both" or "Input Manager
 - Dynamic room creation & removal with automatic server‑side cleanup of scenes
 - FishNet scene isolation: players in Room A can’t see or affect Room B  
 - Basic lobby example for creating a room or joining an existing room from the room list  
-- Optional network lobby player spawning while in the lobby scene
 - Auto‑unload of empty rooms and client room‑scene cleanup on disconnect
 - Extra GUI component FishNetNetworkManagerHUD.cs for development
 - One server, one port, multiple isolated rooms
